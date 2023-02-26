@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./select.module.css";
 
 // A single Select option for the Select component.
@@ -28,6 +28,7 @@ type MultipleSelectProps = {
 const Select = ({ multiple, value, onChange, options }: SelectProps) => {
   const [isOpen, setIsOpen] = useState<Boolean>(false);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Clears the currently selected options.
   function clearOptions() {
@@ -65,8 +66,51 @@ const Select = ({ multiple, value, onChange, options }: SelectProps) => {
     }
   }, [isOpen]);
 
+  // Sets up event listeners for keyboard accessibility.
+  useEffect(() => {
+    const handler = (event: KeyboardEvent) => {
+      if (event.target !== containerRef.current) {
+        return;
+      }
+      switch (event.code) {
+        case "Enter":
+        case "Space":
+          setIsOpen((prev) => !prev);
+          if (isOpen) {
+            selectOption(options[highlightedIndex]);
+          }
+          break;
+        case "ArrowUp":
+        case "ArrowDown": {
+          if (!isOpen) {
+            setIsOpen(true);
+          }
+          setHighlightedIndex((prev) =>
+            event.code === "ArrowUp"
+              ? prev - 1 < 0
+                ? options.length - 1
+                : prev - 1
+              : (prev + 1) % options.length
+          );
+          break;
+        }
+        case "Escape":
+          setIsOpen(false);
+          break;
+        default:
+          break;
+      }
+    };
+    containerRef.current?.addEventListener("keydown", handler);
+
+    return () => {
+      containerRef.current?.removeEventListener("keydown", handler);
+    };
+  }, [isOpen, highlightedIndex]);
+
   return (
     <div
+      ref={containerRef}
       onClick={() => setIsOpen((prev) => !prev)}
       onBlur={() => setIsOpen(false)}
       tabIndex={0}

@@ -17,18 +17,37 @@ function App() {
 
   return (
     <div>
-      <Select
-        multiple={true}
-        onChange={(option) => setValue2(option)}
-        options={options}
-        value={value2}
-      ></Select>
-      <br />
-      <Select
-        onChange={(option) => setValue1(option)}
-        options={options}
-        value={value1}
-      ></Select>
+      <h1>React Custom Select</h1>
+      <p>
+        This React Select component was implemented in TypeScript. This
+        component was implemented using the "em" unit, so options and UI
+        elements will scale with its parent's font size.
+      </p>
+      <p>
+        Keyboard accessibility has also been implemented. When a Select
+        component has been focused, use "Enter" or "Space" to open the options
+        list and choose the hovered option, "Escape" to close the list, and the
+        "Up" and "Down" arrow keys to change the currently highlighted option.
+      </p>
+      <div className="even-columns">
+        <div className="half-column">
+          <h2>Single Select</h2>
+          <Select
+            onChange={(option) => setValue1(option)}
+            options={options}
+            value={value1}
+          ></Select>
+        </div>
+        <div className="half-column">
+          <h2>Multiple Select</h2>
+          <Select
+            multiple={true}
+            onChange={(option) => setValue2(option)}
+            options={options}
+            value={value2}
+          ></Select>
+        </div>
+      </div>
     </div>
   );
 }

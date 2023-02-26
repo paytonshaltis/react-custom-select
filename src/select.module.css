@@ -1,6 +1,5 @@
 .container {
   position: relative;
-  width: 20em;
   min-height: 1.5em;
   border: 0.05em solid #777;
   display: flex;
@@ -94,6 +93,7 @@
   cursor: pointer;
   background: none;
   outline: none;
+  font-size: 0.75em;
 }
 
 .option-badge:hover,

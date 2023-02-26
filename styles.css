@@ -1,0 +1,26 @@
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 32px;
+}
+
+#root {
+  max-width: 40em;
+  margin: 0 auto;
+}
+
+.even-columns {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.half-column {
+  flex: 1;
+}
+
+h1 {
+  color: #2e2e2e;
+}
+
+h2 {
+  color: #777;
+}

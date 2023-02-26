@@ -1,5 +1,7 @@
+import Select from "./Select";
+
 function App() {
-  return <p>Hello</p>;
+  return <Select onChange={() => {}} options={[]}></Select>;
 }
 
 export default App;

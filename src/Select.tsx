@@ -1,9 +1,10 @@
+import { useEffect, useState } from "react";
 import styles from "./select.module.css";
 
 // A single Select option for the Select component.
 type SelectOption = {
   label: string;
-  value: any;
+  value: string | number;
 };
 
 // Props to be passed to the Select component.
@@ -14,16 +15,67 @@ type SelectProps = {
 };
 
 const Select = ({ value, onChange, options }: SelectProps) => {
+  const [isOpen, setIsOpen] = useState<Boolean>(false);
+  const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
+
+  // Clears the currently selected options.
+  function clearOptions() {
+    onChange(undefined);
+  }
+
+  // Sets the option as the selected option.
+  function selectOption(option: SelectOption) {
+    if (!isOptionSelected(option)) {
+      onChange(option);
+    }
+  }
+
+  // Returns true if option is currently selected.
+  function isOptionSelected(option: SelectOption) {
+    return value === option;
+  }
+
+  // Resets highlighted index when Select component closes.
+  useEffect(() => {
+    if (!isOpen) {
+      setHighlightedIndex(0);
+    }
+  }, [isOpen]);
+
   return (
-    <div tabIndex={0} className={styles.container}>
-      <span className={styles.value}>Value</span>
-      <button className={styles["clear-button"]}>&times;</button>
+    <div
+      onClick={() => setIsOpen((prev) => !prev)}
+      onBlur={() => setIsOpen(false)}
+      tabIndex={0}
+      className={styles.container}
+    >
+      <span className={styles.value}>{value?.label}</span>
+      <button
+        onClick={(event) => {
+          event.stopPropagation();
+          clearOptions();
+        }}
+        className={styles["clear-button"]}
+      >
+        &times;
+      </button>
       <div className={styles.divider}></div>
       <div className={styles.caret}></div>
-      <ul className={`${styles.options} ${styles.show}`}>
-        {options.map((option: SelectOption) => {
+      <ul className={`${styles.options} ${isOpen && styles.show}`}>
+        {options.map((option: SelectOption, index) => {
           return (
-            <li key={option.label} className={styles.option}>
+            <li
+              onClick={(event) => {
+                event.stopPropagation();
+                selectOption(option);
+                setIsOpen(false);
+              }}
+              key={option.value}
+              onMouseEnter={() => setHighlightedIndex(index)}
+              className={`${styles.option} ${
+                isOptionSelected(option) && styles.selected
+              } ${index === highlightedIndex && styles.highlighted}`}
+            >
               {option.label}
             </li>
           );
